@@ -38,6 +38,5 @@ jobs:
         run: |
           git config --global user.name "Alpha Scout Bot"
           git config --global user.email "bot@alphascout.local"
-          git add data/latest_report.json
-          # Only commit if there are changes
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update Alpha Scout Report: $(date +'%Y-%m-%d')" && git push)
+          git add data/latest_report.json || echo "No report to add"
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update Report" && git push)
