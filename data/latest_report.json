@@ -1,54 +1,44 @@
 {
   "catalysts": [
     {
-      "ticker": "TSLA",
-      "conviction_score": 9,
-      "thesis": "Tesla stock is under pressure (down 3.3% on Dec 30) as investors nervously await Q4 delivery numbers. Analysts expect ~515k deliveries to meet the 1.8M annual target; a miss could trigger a further breakdown.",
-      "catalyst_details": "Q4 Delivery Numbers expected on January 2, 2025. Consensus estimate: 511,000-515,000 vehicles.",
-      "sentiment": "Bearish",
-      "prediction_market": "Kalshi: 'Tesla deliveries Q4 > 480k' is 70% Yes. Polymarket: 'Tesla Q4 Deliveries' volume rising.",
-      "recency_proof": "Investopedia (Dec 30, 2024): 'Tesla Leads Big-Tech Slump... deliveries report due Thursday.'",
-      "risk": "Stronger-than-expected China numbers (record registrations) could cause a squeeze."
-    },
-    {
-      "ticker": "BA",
-      "conviction_score": 8,
-      "thesis": "Boeing shares dropped >2% breaking technical support at $170 after a 737-800 crash in South Korea prompted immediate inspection orders, reigniting safety concerns.",
-      "catalyst_details": "Jeju Air 737-800 crash incident (Dec 29/30) and subsequent South Korean government inspection order.",
-      "sentiment": "Bearish",
-      "prediction_market": "Polymarket: 'Boeing at fault for South Korea crash?' market created Dec 30. Sentiment implies regulatory risk.",
-      "recency_proof": "MoneyMorning (Dec 30, 2024): 'Boeing Shares Hit Key Technical Support... after 737-800 crash in South Korea.'",
-      "risk": "Investigation clears Boeing of mechanical fault (e.g., pilot error)."
-    },
-    {
-      "ticker": "SPY",
-      "conviction_score": 8,
-      "thesis": "Yields hit multi-month highs (10Y > 4.6%) as traders price out a January Fed rate cut, creating a headwind for equities at all-time highs.",
-      "catalyst_details": "FOMC Meeting Jan 29, 2025. Market has repriced January cut probability significantly lower in the last 72h.",
-      "sentiment": "Bearish",
-      "prediction_market": "Polymarket: 'Fed Rate Cut Jan 2025' odds collapsed to ~13-15%. Kalshi: 'Cut 25bps' at 15%.",
-      "recency_proof": "CoinGape (Dec 29, 2024): 'January Fed Rate Cut Odds Fall to New Lows (13%) After Strong GDP Data.'",
-      "risk": "Weak labor data in early January forces Fed pivot back to dovishness."
-    },
-    {
-      "ticker": "DESP",
-      "conviction_score": 8,
-      "thesis": "Prosus N.V. has agreed to acquire Despegar.com for $1.7 billion ($19.50/share), representing a significant premium and consolidation in the Latin American travel sector.",
-      "catalyst_details": "Acquisition announced during the week of Dec 23-29, 2024. Deal pending closing conditions.",
+      "ticker": "OMER",
+      "conviction_score": 10,
+      "thesis": "FDA approval of Yartemlea (narsoplimab) for TA-TMA marks a transformative commercial milestone, validated by an 81% stock surge.",
+      "catalyst_details": "FDA approved Yartemlea on Dec 29, 2025 (reported), the first treatment for hematopoietic stem cell transplant-associated thrombotic microangiopathy. Launch set for Jan 2026.",
       "sentiment": "Bullish",
-      "prediction_market": "Implied probability high based on definitive agreement; arb spreads likely tight.",
-      "recency_proof": "IMAA Institute (Dec 31, 2024 report covering Dec 23-29): 'Prosus N.V. to Acquire Despegar.com for USD 1.70 Billion.'",
-      "risk": "Regulatory hurdles in Latin American jurisdictions could delay or block the deal."
+      "prediction_market": "Stock surged 81% post-approval; Market effectively priced near-0% chance of rejection given the move.",
+      "recency_proof": "Zacks Investment Research (Dec 29, 2025) - 'Omeros Gets FDA Approval for YARTEMLEA...'",
+      "risk": "Commercial execution and reimbursement uptake hurdles in early 2026."
     },
     {
-      "ticker": "MSTR",
-      "conviction_score": 7,
-      "thesis": "MicroStrategy plunged 8.2% as Bitcoin failed to reclaim $100k by year-end, leading to book-squaring and volatility in crypto-proxy stocks.",
-      "catalyst_details": "Year-end portfolio rebalancing and Bitcoin failing to hit the psychological $100k milestone in 2024.",
+      "ticker": "IMMR",
+      "conviction_score": 9,
+      "thesis": "Significant earnings miss on Dec 31 signals deteriorating core business fundamentals despite haptic tech potential.",
+      "catalyst_details": "Q4 Earnings released Dec 31, 2025. EPS reported $0.08 vs $0.14 estimate (-41.43% surprise).",
       "sentiment": "Bearish",
-      "prediction_market": "Polymarket: 'Bitcoin hit $100k in 2024?' odds collapsed to <1% as time expires.",
-      "recency_proof": "Investopedia (Dec 30, 2024): 'MicroStrategy leads Nasdaq decliners, plunging 8.2%.'",
-      "risk": "Sudden spot Bitcoin ETF inflows in first week of Jan 2025."
+      "prediction_market": "Analyst Consensus: Strong Buy (Target $12.50) failed to predict the -41% EPS miss.",
+      "recency_proof": "TradingView Earnings Calendar (Dec 31, 2025) - 'Reported EPS 0.08... Surprise -41.43%'",
+      "risk": "Potential patent litigation wins or unexpected licensing deals could reverse sentiment."
+    },
+    {
+      "ticker": "NVO",
+      "conviction_score": 9,
+      "thesis": "FDA approval of oral Wegovy cements dominance in obesity market, providing a critical moat against Eli Lilly's entry.",
+      "catalyst_details": "FDA approved oral Wegovy (semaglutide 25mg) for weight loss. News circulated/updated Dec 30, 2025.",
+      "sentiment": "Bullish",
+      "prediction_market": "Polymarket 'Obesity Drug Dominance' (Proxy); Stock rallied ~2.5% on news, confirming market approval pricing.",
+      "recency_proof": "Healthcare Finance News (Dec 30, 2025) - 'FDA approves Wegovy pill...'",
+      "risk": "Competition from Eli Lilly's orforglipron (oral GLP-1) expected in 2026."
+    },
+    {
+      "ticker": "CVM",
+      "conviction_score": 8,
+      "thesis": "Earnings surprise and reduced burn rate indicate operational efficiency ahead of pivotal Multikine registration trial.",
+      "catalyst_details": "Earnings reported Dec 29, 2025. Stock rose 4.8%, defying options market implied volatility of ±19.9%.",
+      "sentiment": "Mixed",
+      "prediction_market": "Options Market: Implied Move ±19.9% vs Actual +4.8% (Volatility Crush).",
+      "recency_proof": "MarketChameleon (Dec 29, 2025) - 'CVM Earnings Surprise: Stock Climbs 4.8%'",
+      "risk": "Historical tendency for stock to fade post-earnings; Multikine trial risks remain binary."
     }
   ]
 }
