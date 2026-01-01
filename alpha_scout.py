@@ -14,7 +14,7 @@ from google.genai import types
 import pytz
 
 # --- CONFIGURATION ---
-MODEL_ID = os.getenv("GEMINI_MODEL", "gemini-1.5-pro-002") 
+MODEL_ID = os.getenv("GEMINI_MODEL", "gemini-3-pro-preview") 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 DATA_FILE = "data/latest_report.json"
