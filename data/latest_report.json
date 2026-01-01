@@ -1,44 +1,34 @@
 {
   "catalysts": [
     {
-      "ticker": "OMER",
-      "conviction_score": 10,
-      "thesis": "FDA approval of Yartemlea (narsoplimab) for TA-TMA marks a transformative commercial milestone, validated by an 81% stock surge.",
-      "catalyst_details": "FDA approved Yartemlea on Dec 29, 2025 (reported), the first treatment for hematopoietic stem cell transplant-associated thrombotic microangiopathy. Launch set for Jan 2026.",
-      "sentiment": "Bullish",
-      "prediction_market": "Stock surged 81% post-approval; Market effectively priced near-0% chance of rejection given the move.",
-      "recency_proof": "Zacks Investment Research (Dec 29, 2025) - 'Omeros Gets FDA Approval for YARTEMLEA...'",
-      "risk": "Commercial execution and reimbursement uptake hurdles in early 2026."
-    },
-    {
-      "ticker": "IMMR",
-      "conviction_score": 9,
-      "thesis": "Significant earnings miss on Dec 31 signals deteriorating core business fundamentals despite haptic tech potential.",
-      "catalyst_details": "Q4 Earnings released Dec 31, 2025. EPS reported $0.08 vs $0.14 estimate (-41.43% surprise).",
-      "sentiment": "Bearish",
-      "prediction_market": "Analyst Consensus: Strong Buy (Target $12.50) failed to predict the -41% EPS miss.",
-      "recency_proof": "TradingView Earnings Calendar (Dec 31, 2025) - 'Reported EPS 0.08... Surprise -41.43%'",
-      "risk": "Potential patent litigation wins or unexpected licensing deals could reverse sentiment."
-    },
-    {
-      "ticker": "NVO",
-      "conviction_score": 9,
-      "thesis": "FDA approval of oral Wegovy cements dominance in obesity market, providing a critical moat against Eli Lilly's entry.",
-      "catalyst_details": "FDA approved oral Wegovy (semaglutide 25mg) for weight loss. News circulated/updated Dec 30, 2025.",
-      "sentiment": "Bullish",
-      "prediction_market": "Polymarket 'Obesity Drug Dominance' (Proxy); Stock rallied ~2.5% on news, confirming market approval pricing.",
-      "recency_proof": "Healthcare Finance News (Dec 30, 2025) - 'FDA approves Wegovy pill...'",
-      "risk": "Competition from Eli Lilly's orforglipron (oral GLP-1) expected in 2026."
-    },
-    {
-      "ticker": "CVM",
+      "ticker": "SPY",
       "conviction_score": 8,
-      "thesis": "Earnings surprise and reduced burn rate indicate operational efficiency ahead of pivotal Multikine registration trial.",
-      "catalyst_details": "Earnings reported Dec 29, 2025. Stock rose 4.8%, defying options market implied volatility of ±19.9%.",
-      "sentiment": "Mixed",
-      "prediction_market": "Options Market: Implied Move ±19.9% vs Actual +4.8% (Volatility Crush).",
-      "recency_proof": "MarketChameleon (Dec 29, 2025) - 'CVM Earnings Surprise: Stock Climbs 4.8%'",
-      "risk": "Historical tendency for stock to fade post-earnings; Multikine trial risks remain binary."
+      "thesis": "Polymarket odds for a January 2026 Fed rate cut have collapsed to ~12%, with 88% favoring a 'Hold'. This hawkish repricing (removing ease expectations) presents a short-term liquidity headwind for equities and crypto.",
+      "catalyst_details": "Federal Reserve Open Market Committee (FOMC) meeting in January 2026. Data from Dec 30 confirms market consensus has shifted to a 'Pause' (Hold) scenario.",
+      "sentiment": "Bearish",
+      "prediction_market": "Polymarket: 'Fed decision in January?' Odds: 88% No Change, 12% Cut. Vol: ~$101M.",
+      "recency_proof": "CryptoTicker Analysis (Dec 30, 2025): 'Polymarket Traders Expect the Fed to Pause Rates in 2026' - confirming 87-88% hold probability.",
+      "risk": "Unexpected Dovish Pivot: If the Fed cuts 25bps (12% implied probability), shorts would be squeezed."
+    },
+    {
+      "ticker": "CCL",
+      "conviction_score": 9,
+      "thesis": "Hawaii's 11% tax on cruise ship gross fares and lodging officially takes effect Jan 1, 2026, after a US District Court denied the industry's motion for an injunction. This creates immediate margin compression or pricing friction for Hawaii routes.",
+      "catalyst_details": "Effective Date: Jan 1, 2026. Legal Ruling: District Judge denied injunction Dec 23, reported extensively in legal/tax journals Dec 30.",
+      "sentiment": "Bearish",
+      "prediction_market": "Legal Ruling (Determinative): Injunction Denied (Probability 100%). Market must now price in the active tax liability.",
+      "recency_proof": "VitalLaw (Dec 30, 2025): 'Hawaii... Court Declines to Halt Implementation of New Tax on Cruise Ship Accommodations.'",
+      "risk": "Pass-through Elasticity: If cruise lines successfully pass the 11% fee to customers without reducing booking volumes, earnings impact may be negligible."
+    },
+    {
+      "ticker": "XHB",
+      "conviction_score": 7,
+      "thesis": "Mortgage rates have dropped to their lowest level of 2025 (<5.5%) as of Dec 31, providing a tailwind for homebuilders heading into the Q1 2026 spring selling season despite the Fed's pause.",
+      "catalyst_details": "Year-End Rate Data (Dec 31, 2025): 30-year fixed rates breached 2025 lows, improving affordability optics for 2026.",
+      "sentiment": "Bullish",
+      "prediction_market": "Polymarket Proxy: 'Fed Rates 2026' (Pause Consensus) stabilizes the long end of the curve, preventing volatility spikes.",
+      "recency_proof": "CBS MoneyWatch (Dec 31, 2025): 'Mortgage rates fall to their lowest level in 2025... less than 5.5%.'",
+      "risk": "Yield Spike: If the 10-year Treasury yield rebounds aggressively in Jan 2026, mortgage rates will reverse, crushing builder sentiment."
     }
   ]
 }
