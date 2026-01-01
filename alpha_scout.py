@@ -2,6 +2,7 @@ import os
 import json
 import time
 import requests
+import re
 from datetime import datetime, timedelta
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -9,7 +10,7 @@ from google import genai
 from google.genai import types
 
 # --- CONFIGURATION ---
-# Latest model as of December 2025: gemini-3-pro-preview
+# Ensure you are using a model capable of complex reasoning
 MODEL_ID = os.getenv("GEMINI_MODEL", "gemini-3-pro-preview") 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
@@ -18,16 +19,46 @@ DATA_FILE = "data/latest_report.json"
 # --- DATA MODELS ---
 class Catalyst(BaseModel):
     ticker: str = Field(..., description="Stock Ticker (e.g., AAPL)")
-    conviction_score: int = Field(..., description="1-10 Score. 8+ requires hard date.")
-    thesis: str = Field(..., description="1-2 sentence thesis.")
+    market_cap: str = Field(..., description="Market Cap string (e.g., '$450M', '$2.1B'). Essential for liquidity checks.")
+    conviction_score: int = Field(..., description="1-10 Score. 8+ requires hard date and institutional backing.")
+    thesis: str = Field(..., description="1-2 sentence thesis focusing on the inefficiency.")
     catalyst_details: str = Field(..., description="Specific event details and timing.")
+    earnings_date: str = Field(..., description="Next earnings date. Mark 'Past' if recently reported, or specific date.")
+    relative_volume: str = Field(..., description="Current vol vs 30d avg (e.g., '2.5x 30d avg').")
+    stop_loss_trigger: str = Field(..., description="Specific price or event that invalidates the thesis.")
     sentiment: str = Field(..., description="Bullish, Bearish, or Mixed")
     prediction_market: str = Field(..., description="Source, Odds, and 24h change if available.")
     recency_proof: str = Field(..., description="Source Link and Timestamp.")
     risk: str = Field(..., description="Primary invalidation factor.")
+    expected_upside: str = Field(..., description="Quantified potential (e.g., '10-20% drift').")
+    mispricing_evidence: str = Field(..., description="Why not priced in (e.g., 'Price flat despite news').")
+    x_sentiment: Optional[str] = Field(None, description="X buzz summary.")
 
 class ScoutReport(BaseModel):
     catalysts: List[Catalyst]
+
+# --- HELPER FUNCTIONS ---
+def parse_market_cap_to_millions(cap_str: str) -> float:
+    """Converts strings like '$450M' or '$2.1B' into millions (float)."""
+    clean = cap_str.upper().replace('$', '').replace(',', '').strip()
+    try:
+        if 'B' in clean:
+            return float(re.search(r"[\d\.]+", clean).group()) * 1000
+        elif 'M' in clean:
+            return float(re.search(r"[\d\.]+", clean).group())
+        elif 'T' in clean:
+            return float(re.search(r"[\d\.]+", clean).group()) * 1000000
+        return 0.0
+    except:
+        return 0.0
+
+def parse_upside_percentage(upside_str: str) -> float:
+    """Extracts percentage. If range '10-20%', returns average (15.0)."""
+    matches = re.findall(r'(\d+(?:\.\d+)?)%', upside_str)
+    if not matches:
+        return 0.0
+    values = [float(x) for x in matches]
+    return sum(values) / len(values)
 
 # --- AGENT SETUP ---
 def get_alpha_scout_response():
@@ -42,46 +73,48 @@ def get_alpha_scout_response():
 
     # System Instructions
     system_instruction = f"""
-    Role: You are “Alpha Scout,” a senior event‑driven analyst specializing in uncovering undervalued bullish catalysts with high profit potential, focusing on market inefficiencies where events are not yet fully priced in (e.g., pre-announcement rumors, sentiment mismatches, or small-cap drifts).
+    Role: You are “Alpha Scout,” a Quant-Fundamental Analyst. Your goal is to find "Asymmetric Upside" where the potential gain is 3x the risk.
 
-    Constraints:
-    1. 72h Recency: ONLY items published in the last 72 hours. ABSOLUTELY NO items from {prev_year} or earlier.
-    Verify the year of every source. If the current year is {current_year}, every catalyst MUST have been published in {current_year}.
-    2. Source Priority: Start with SEC.gov, FDA.gov, Official IR, Tier-1 news (Reuters/Bloomberg), then supplement with X (Twitter) via searches like "site:x.com" for emerging narratives, and niche forums (e.g., Reddit via "site:reddit.com").
-    3. Prediction Markets: MUST cross-reference with Polymarket or Kalshi odds, focusing on bullish probabilities (>50%) that suggest mispricing (e.g., odds higher than implied by stock options or analyst consensus). If no direct market, use proxies and estimate upside edge.
-    4. Logic: Deduplicate news; Normalize names to Tickers. Prioritize diverse sectors with inefficiencies (e.g., biotech, small-caps, emerging tech). Focus on signals with evidence of incomplete pricing (e.g., low volume reaction, high short interest).
-    5. Conviction: Rate 1–10 based on profit potential (upside asymmetry). Score 8+ requires a "Hard Date" or verifiable rumor, supportive prediction odds (>60% bullish), AND signs of mispricing (e.g., options skew or X buzz outpacing news).
+    STRATEGY FOCUS:
+    1. Post-Earnings Announcement Drift (PEAD): Look for companies that beat earnings >20% but price moved <5%.
+    2. Biotech PDUFA Run-ups: Confirmed FDA dates 30-60 days out.
+    3. Insider Aggression: Form 4 filings showing "Open Market" purchases >$100k by C-suite.
+    4. Macro/Sector Rotation: Small-caps benefiting from immediate rate/policy shifts.
 
-    Task:
-    Search for undervalued bullish catalysts from the last 72 hours that show strong signs of upside not yet fully priced in, such as pre-event rumors, positive surprises in inefficient markets, or emerging narratives on X/social media. Include only those with bullish sentiment and evidence of profit edge (e.g., historical post-event drifts averaging +10-20%, sentiment deltas indicating momentum buildup).
-    Verify with prediction markets and quantify potential returns (e.g., based on analogs). Return a ranked list (by conviction descending) of 3-7 catalysts to avoid noise.
+    STRICT FILTERS:
+    1. "Priced-In" Check: DISCARD any stock that has already moved >8% on the day of the news. The alpha is gone.
+    2. Source Weighting: Prioritize SEC Edgar (Form 4, 8-K) and FDA Calendars over social media.
+    3. Liquidity: Focus on Market Caps between $500M and $10B (Mid/Small Cap). Avoid Micro-caps (<$300M).
+    4. Risk Management: You must identify a specific 'Stop Loss Trigger' (technical level or news event).
+
+    FORBIDDEN DATES:
+    - Today is {today_str} ({current_year}).
+    - You MUST strictly ignore any search results from {prev_year} or earlier.
+    - Verify every timestamp. If a result says "Dec 28" but the year is {prev_year}, DISCARD IT.
     """
 
-    # Tool Configuration: Google Search
+    # Tool Configuration
     tools = [types.Tool(google_search=types.GoogleSearch())]
 
     # Prompt Construction
     prompt = f"""
-    Current Full Timestamp: {now.strftime('%Y-%m-%d %H:%M:%S')}
-    Today is in the year {current_year}.
+    Current Date: {today_str}
+    
+    Perform a deep sweep for unpriced bullish catalysts published ONLY between {three_days_ago} and {today_str}.
 
-    Perform a deep sweep for undervalued bullish catalysts ONLY between {three_days_ago} and {today_str}, emphasizing pre-event buildups, mispricings, and emerging narratives likely to drive multi-day upside (e.g., rumor leaks, unusual SEC filings with X buzz, positive macro shifts in small-caps).
-
-    CRITICAL:
-    - You MUST ignore any search results from {prev_year}.
-    - Many articles from late {prev_year} may appear in search results; you are FORBIDDEN from using them.
-    - For each candidate, verify the publication year is {current_year}.
-    - If a result is from "Dec 30" but the year is {prev_year}, DISCARD IT.
-    - Discard bearish/mixed or fully priced-in events (e.g., if stock already up >10% post-news); only include those with incomplete absorption (e.g., flat/low volume reaction).
-
-    1. Search for trending bullish signals on SEC, FDA, Reuters, Bloomberg, and X (use "site:x.com" + keywords like "rumor" or "leak" for narratives) in the last 72h of {current_year}. Target inefficiencies: small/mid-caps (market cap < $10B), high-vol sectors.
-    2. For each candidate, SEARCH for prediction market odds on Polymarket/Kalshi, plus proxies like options activity (e.g., "unusual call volume {ticker}"), short interest, or X sentiment (e.g., "site:x.com {ticker} bullish" with engagement metrics).
-    3. Identify mispricings: Compare odds to market reaction (e.g., if odds imply 70% upside but stock flat, flag as edge). Search for historical analogs (e.g., "similar {event} stock performance history") to estimate drifts/returns.
-    4. Enhance with quantitative insights: Expected impact (e.g., "% price target upside per analysts"), risk-reward ratio, or narrative strength (e.g., X virality score via retweets/mentions).
-    5. Compile into JSON schema, ensuring each has bullish sentiment, mispricing evidence, and profit rationale.
+    Execution Steps:
+    1. Search SEC filings (Form 4, 8-K) and FDA databases for events in the last 72h.
+    2. Filter for "Quiet Winners": Stocks with good news but low relative volume or muted price action (<5% move).
+    3. Cross-reference with Prediction Markets (Polymarket/Kalshi) or Options Flow (Call/Put skew).
+    4. For each candidate, explicitly check the Market Cap.
+    5. Compile the JSON report.
+    
+    CRITICAL: 
+    - Ensure 'earnings_date' is accurate. If earnings are within 7 days, flag as HIGH RISK.
+    - Ensure 'market_cap' is formatted like '$500M' or '$2.5B'.
     """
 
-    # Generate Content with Structured Output
+    # Generate Content
     response = client.models.generate_content(
         model=MODEL_ID,
         contents=prompt,
@@ -104,13 +137,16 @@ def save_to_json(report: ScoutReport):
 
 def format_telegram_message(catalyst: Catalyst) -> str:
     return (
-        f"🚀 *{catalyst.ticker}* - *{catalyst.conviction_score}/10*\n"
-        f"- *Thesis:* {catalyst.thesis}\n"
-        f"- *Catalyst:* {catalyst.catalyst_details}\n"
-        f"- *Sentiment:* {catalyst.sentiment}\n"
-        f"- *Prediction Market:* {catalyst.prediction_market}\n"
-        f"- *Recency Proof:* {catalyst.recency_proof}\n"
-        f"- *Risk:* {catalyst.risk}"
+        f"🚀 *{catalyst.ticker}* ({catalyst.market_cap}) - *{catalyst.conviction_score}/10*\n"
+        f"📊 *Vol:* {catalyst.relative_volume} | *Upside:* {catalyst.expected_upside}\n\n"
+        f"💡 *Thesis:* {catalyst.thesis}\n"
+        f"📅 *Catalyst:* {catalyst.catalyst_details}\n"
+        f"🛑 *Stop Loss:* {catalyst.stop_loss_trigger}\n"
+        f"⚠️ *Earnings:* {catalyst.earnings_date}\n"
+        f"🎲 *Pred. Market:* {catalyst.prediction_market}\n"
+        f"🔗 *Proof:* {catalyst.recency_proof}\n"
+        f"📉 *Risk:* {catalyst.risk}\n"
+        f"🧠 *Mispricing:* {catalyst.mispricing_evidence}"
     )
 
 def send_telegram_alert(message: str):
@@ -128,44 +164,80 @@ def send_telegram_alert(message: str):
     try:
         resp = requests.post(url, json=payload)
         resp.raise_for_status()
-        print(f"[*] Telegram sent for ticker.")
+        print(f"[*] Telegram sent.")
     except Exception as e:
         print(f"[!] Failed to send Telegram: {e}")
 
 # --- MAIN EXECUTION ---
 def main():
-    print("[-] Alpha Scout initializing...")
+    print("[-] Alpha Scout initializing (Quant-Fundamental Mode)...")
     try:
         report = get_alpha_scout_response()
         
         if not report or not report.catalysts:
             print("[!] No catalysts found.")
             return
-
-        # Filter for Conviction >= 7
-        high_conviction = [c for c in report.catalysts if c.conviction_score >= 7]
         
-        if not high_conviction:
-            print("[-] No catalysts met the conviction threshold (>=7).")
-            # We still save the full report for records, or you can choose to save empty
-            save_to_json(report) 
+        filtered_catalysts = []
+        
+        print(f"[-] Analyzing {len(report.catalysts)} raw candidates...")
+
+        for c in report.catalysts:
+            # 1. Parse Metrics
+            upside_val = parse_upside_percentage(c.expected_upside)
+            mcap_millions = parse_market_cap_to_millions(c.market_cap)
+            
+            # 2. Liquidity Guard (Sweet Spot: $500M - $10B)
+            # We allow slightly outside this range if conviction is extremely high (9+), 
+            # otherwise we strictly enforce >$300M to avoid penny stocks.
+            is_liquid_enough = mcap_millions >= 300 
+            is_sweet_spot = 500 <= mcap_millions <= 10000
+            
+            # 3. Scoring Logic
+            # Boost score if in sweet spot
+            final_score = c.conviction_score
+            if is_sweet_spot:
+                final_score += 0.5
+            
+            # 4. Filter Criteria
+            # - Must be Bullish
+            # - Must have >8% upside potential
+            # - Must be liquid enough
+            # - Score must be >= 7.5 (adjusted)
+            if (c.sentiment == "Bullish" and 
+                upside_val >= 8 and 
+                is_liquid_enough and 
+                final_score >= 7.5):
+                
+                # Update the object with the adjusted score (optional, for sorting)
+                c.conviction_score = int(final_score) if final_score > 10 else int(final_score)
+                filtered_catalysts.append(c)
+
+        if not filtered_catalysts:
+            print("[-] No catalysts met the strict Quant-Fundamental criteria.")
+            save_to_json(report) # Save raw data for debugging
             return
-
-        # Save filtered list to JSON (or full list, depending on preference. 
-        # Instructions say "Overwrite with the result", implying the filtered result or full result.
-        # We will save the high conviction ones to be safe).
-        filtered_report = ScoutReport(catalysts=high_conviction)
-        save_to_json(filtered_report)
-
-        # Send Telegram Messages
-        for item in high_conviction:
+        
+        # Sort: Highest Conviction first
+        filtered_catalysts.sort(key=lambda c: c.conviction_score, reverse=True)
+        
+        # Select Top 3
+        top_picks = filtered_catalysts[:3]
+        
+        # Save Report
+        final_report = ScoutReport(catalysts=filtered_catalysts)
+        save_to_json(final_report)
+        
+        # Alert
+        for item in top_picks:
             msg = format_telegram_message(item)
             send_telegram_alert(msg)
-            time.sleep(1) # Rate limit safety
+            time.sleep(1)
+        
+        print(f"[*] Processed {len(filtered_catalysts)} valid signals. Sent {len(top_picks)} alerts.")
 
     except Exception as e:
         print(f"[!] Critical Error: {e}")
-        # Optional: Send error log to Telegram
 
 if __name__ == "__main__":
     main()
