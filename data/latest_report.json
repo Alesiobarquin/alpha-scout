@@ -1,34 +1,21 @@
 {
   "catalysts": [
     {
-      "ticker": "SPY",
-      "conviction_score": 8,
-      "thesis": "Polymarket odds for a January 2026 Fed rate cut have collapsed to ~12%, with 88% favoring a 'Hold'. This hawkish repricing (removing ease expectations) presents a short-term liquidity headwind for equities and crypto.",
-      "catalyst_details": "Federal Reserve Open Market Committee (FOMC) meeting in January 2026. Data from Dec 30 confirms market consensus has shifted to a 'Pause' (Hold) scenario.",
-      "sentiment": "Bearish",
-      "prediction_market": "Polymarket: 'Fed decision in January?' Odds: 88% No Change, 12% Cut. Vol: ~$101M.",
-      "recency_proof": "CryptoTicker Analysis (Dec 30, 2025): 'Polymarket Traders Expect the Fed to Pause Rates in 2026' - confirming 87-88% hold probability.",
-      "risk": "Unexpected Dovish Pivot: If the Fed cuts 25bps (12% implied probability), shorts would be squeezed."
-    },
-    {
-      "ticker": "CCL",
+      "ticker": "IMNM",
+      "market_cap": "$1.95B",
       "conviction_score": 9,
-      "thesis": "Hawaii's 11% tax on cruise ship gross fares and lodging officially takes effect Jan 1, 2026, after a US District Court denied the industry's motion for an injunction. This creates immediate margin compression or pricing friction for Hawaii routes.",
-      "catalyst_details": "Effective Date: Jan 1, 2026. Legal Ruling: District Judge denied injunction Dec 23, reported extensively in legal/tax journals Dec 30.",
-      "sentiment": "Bearish",
-      "prediction_market": "Legal Ruling (Determinative): Injunction Denied (Probability 100%). Market must now price in the active tax liability.",
-      "recency_proof": "VitalLaw (Dec 30, 2025): 'Hawaii... Court Declines to Halt Implementation of New Tax on Cruise Ship Accommodations.'",
-      "risk": "Pass-through Elasticity: If cruise lines successfully pass the 11% fee to customers without reducing booking volumes, earnings impact may be negligible."
-    },
-    {
-      "ticker": "XHB",
-      "conviction_score": 7,
-      "thesis": "Mortgage rates have dropped to their lowest level of 2025 (<5.5%) as of Dec 31, providing a tailwind for homebuilders heading into the Q1 2026 spring selling season despite the Fed's pause.",
-      "catalyst_details": "Year-End Rate Data (Dec 31, 2025): 30-year fixed rates breached 2025 lows, improving affordability optics for 2026.",
+      "thesis": "High-conviction Insider Aggression. CEO Clay Siegall (founder of Seagen) purchased ~$100k in open market shares at 52-week highs, signaling anticipation of a breakout or major fundamental development. Despite the bullish filing, price action was muted (-1.9%), creating a divergence between insider sentiment and market reaction.",
+      "catalyst_details": "Form 4 filing on Dec 30/31, 2025, revealing CEO Clay Siegall bought 4,729 shares at $21.15. This follows a $400M financing, extending cash runway to 2028.",
+      "earnings_date": "2026-03-19",
+      "relative_volume": "Normal (1.0x 30d avg)",
+      "stop_loss_trigger": "Close below $19.50 (Recent breakout support)",
       "sentiment": "Bullish",
-      "prediction_market": "Polymarket Proxy: 'Fed Rates 2026' (Pause Consensus) stabilizes the long end of the curve, preventing volatility spikes.",
-      "recency_proof": "CBS MoneyWatch (Dec 31, 2025): 'Mortgage rates fall to their lowest level in 2025... less than 5.5%.'",
-      "risk": "Yield Spike: If the 10-year Treasury yield rebounds aggressively in Jan 2026, mortgage rates will reverse, crushing builder sentiment."
+      "prediction_market": "None available",
+      "recency_proof": "https://www.investing.com/news/company-news/immunome-imnm-ceo-siegall-buys-100k-in-shares-93CH-3806442 (Timestamp: 2025-12-31)",
+      "risk": "Clinical data failure (pipeline risk typical of biotech), though CEO buying mitigates.",
+      "expected_upside": "15-20% drift to ~$25.00 on filings digestion",
+      "mispricing_evidence": "Stock closed down -1.94% on the day the Form 4 was filed, failing to price in the CEO's aggression.",
+      "x_sentiment": "Low buzz, largely unnoticed retail discussion."
     }
   ]
 }
