@@ -12,8 +12,8 @@ from google.genai import types
 import pytz
 
 # --- CONFIGURATION ---
-# Use a model capable of complex reasoning (Gemini 1.5 Pro or newer)
-MODEL_ID = os.getenv("GEMINI_MODEL", "gemini-1.5-pro-002") 
+# Use a model capable of complex reasoning (Gemini 3 Pro or newer)
+MODEL_ID = os.getenv("GEMINI_MODEL", "gemini-3-pro-preview") 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 DATA_FILE = "data/latest_report.json"
