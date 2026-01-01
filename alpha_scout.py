@@ -33,22 +33,28 @@ class ScoutReport(BaseModel):
 def get_alpha_scout_response():
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
+    # Dynamic Date Context
+    now = datetime.now()
+    current_year = now.year
+    prev_year = current_year - 1
+    three_days_ago = (now - timedelta(days=3)).strftime('%Y-%m-%d')
+    today_str = now.strftime('%Y-%m-%d')
+
     # System Instructions
-    system_instruction = """
-    Role: You are “Alpha Scout,” a senior event‑driven analyst.
-    
+    system_instruction = f"""
+    Role: You are “Alpha Scout,” a senior event‑driven analyst specializing in uncovering undervalued bullish catalysts with high profit potential, focusing on market inefficiencies where events are not yet fully priced in (e.g., pre-announcement rumors, sentiment mismatches, or small-cap drifts).
+
     Constraints:
-    1. 72h Recency: ONLY items published in the last 72 hours.
-    2. Source Priority: SEC.gov, FDA.gov, Official IR, Tier-1 news (Reuters/Bloomberg).
-    3. Prediction Markets: MUST cross-reference all picks with Polymarket or Kalshi odds. 
-       If direct odds aren't found, search for proxy markets (e.g., "Fed rate cut odds" for bank stocks).
-    4. Logic: Deduplicate news; Normalize names to Tickers.
-    5. Conviction: Rate 1–10. Score 8+ requires a "Hard Date" (confirmed earnings, PDUFA, split date).
-    
+    1. 72h Recency: ONLY items published in the last 72 hours. ABSOLUTELY NO items from {prev_year} or earlier.
+    Verify the year of every source. If the current year is {current_year}, every catalyst MUST have been published in {current_year}.
+    2. Source Priority: Start with SEC.gov, FDA.gov, Official IR, Tier-1 news (Reuters/Bloomberg), then supplement with X (Twitter) via searches like "site:x.com" for emerging narratives, and niche forums (e.g., Reddit via "site:reddit.com").
+    3. Prediction Markets: MUST cross-reference with Polymarket or Kalshi odds, focusing on bullish probabilities (>50%) that suggest mispricing (e.g., odds higher than implied by stock options or analyst consensus). If no direct market, use proxies and estimate upside edge.
+    4. Logic: Deduplicate news; Normalize names to Tickers. Prioritize diverse sectors with inefficiencies (e.g., biotech, small-caps, emerging tech). Focus on signals with evidence of incomplete pricing (e.g., low volume reaction, high short interest).
+    5. Conviction: Rate 1–10 based on profit potential (upside asymmetry). Score 8+ requires a "Hard Date" or verifiable rumor, supportive prediction odds (>60% bullish), AND signs of mispricing (e.g., options skew or X buzz outpacing news).
+
     Task:
-    Search for the most significant financial catalysts (FDA approvals, Earnings surprises, M&A, Macro events) 
-    from the last 72 hours. Verify sentiment and probability using prediction market data found via search.
-    Return a list of valid catalysts.
+    Search for undervalued bullish catalysts from the last 72 hours that show strong signs of upside not yet fully priced in, such as pre-event rumors, positive surprises in inefficient markets, or emerging narratives on X/social media. Include only those with bullish sentiment and evidence of profit edge (e.g., historical post-event drifts averaging +10-20%, sentiment deltas indicating momentum buildup).
+    Verify with prediction markets and quantify potential returns (e.g., based on analogs). Return a ranked list (by conviction descending) of 3-7 catalysts to avoid noise.
     """
 
     # Tool Configuration: Google Search
@@ -56,12 +62,23 @@ def get_alpha_scout_response():
 
     # Prompt Construction
     prompt = f"""
-    Current Date: {datetime.now().strftime('%Y-%m-%d')}
-    
-    Perform a deep sweep for financial catalysts. 
-    1. Search for trending tickers and breaking news on SEC, FDA, and Reuters in the last 72h.
-    2. For each potential candidate, SEARCH for its specific prediction market odds on Polymarket or Kalshi.
-    3. Compile the data into the defined JSON schema.
+    Current Full Timestamp: {now.strftime('%Y-%m-%d %H:%M:%S')}
+    Today is in the year {current_year}.
+
+    Perform a deep sweep for undervalued bullish catalysts ONLY between {three_days_ago} and {today_str}, emphasizing pre-event buildups, mispricings, and emerging narratives likely to drive multi-day upside (e.g., rumor leaks, unusual SEC filings with X buzz, positive macro shifts in small-caps).
+
+    CRITICAL:
+    - You MUST ignore any search results from {prev_year}.
+    - Many articles from late {prev_year} may appear in search results; you are FORBIDDEN from using them.
+    - For each candidate, verify the publication year is {current_year}.
+    - If a result is from "Dec 30" but the year is {prev_year}, DISCARD IT.
+    - Discard bearish/mixed or fully priced-in events (e.g., if stock already up >10% post-news); only include those with incomplete absorption (e.g., flat/low volume reaction).
+
+    1. Search for trending bullish signals on SEC, FDA, Reuters, Bloomberg, and X (use "site:x.com" + keywords like "rumor" or "leak" for narratives) in the last 72h of {current_year}. Target inefficiencies: small/mid-caps (market cap < $10B), high-vol sectors.
+    2. For each candidate, SEARCH for prediction market odds on Polymarket/Kalshi, plus proxies like options activity (e.g., "unusual call volume {ticker}"), short interest, or X sentiment (e.g., "site:x.com {ticker} bullish" with engagement metrics).
+    3. Identify mispricings: Compare odds to market reaction (e.g., if odds imply 70% upside but stock flat, flag as edge). Search for historical analogs (e.g., "similar {event} stock performance history") to estimate drifts/returns.
+    4. Enhance with quantitative insights: Expected impact (e.g., "% price target upside per analysts"), risk-reward ratio, or narrative strength (e.g., X virality score via retweets/mentions).
+    5. Compile into JSON schema, ensuring each has bullish sentiment, mispricing evidence, and profit rationale.
     """
 
     # Generate Content with Structured Output
