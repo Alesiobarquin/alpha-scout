@@ -4,3 +4,5 @@ pydantic
 pytz
 yfinance
 pandas
+streamlit
+plotly
