@@ -5,6 +5,7 @@ import streamlit.components.v1 as components
 import json
 import os
 import time
+from streamlit_autorefresh import st_autorefresh
 
 # -----------------------------------------------------------------------------
 # 1. PAGE CONFIGURATION & STYLING
@@ -122,7 +123,18 @@ def load_history_csv():
         return pd.DataFrame()
 
 # -----------------------------------------------------------------------------
-# 3. LIVE MARKET DATA (CACHED)
+# 3. CACHED DATA WRAPPER
+# -----------------------------------------------------------------------------
+@st.cache_data(ttl=3600)
+def get_data_bundle():
+    """Bundles data loading and provides a sync timestamp."""
+    json_data = load_latest_json()
+    csv_data = load_history_csv()
+    sync_time = time.strftime("%H:%M:%S")
+    return json_data, csv_data, sync_time
+
+# -----------------------------------------------------------------------------
+# 4. LIVE MARKET DATA (CACHED)
 # -----------------------------------------------------------------------------
 @st.cache_data(ttl=300, show_spinner=False)
 def fetch_live_prices(tickers):
@@ -196,13 +208,35 @@ def render_chart(ticker):
 # 5. MAIN APP
 # -----------------------------------------------------------------------------
 def main():
-    st.title("Alpha Scout Terminal")
+    # 1. Auto-Refresh (every 30 mins)
+    st_autorefresh(interval=30 * 60 * 1000, key="datarefresh")
+
+    # 2. Sidebar Controls
+    with st.sidebar:
+        st.header("Terminal Controls")
+        if st.button("🔄 Force Refresh", use_container_width=True):
+            st.cache_data.clear()
+            st.rerun()
+        
+    # 3. Load Data Bundle
+    signal, df, last_sync = get_data_bundle()
+
+    # 4. UI Header
+    c_title, c_sync = st.columns([3, 1])
+    with c_title:
+        st.title("Alpha Scout Terminal")
+    with c_sync:
+        st.markdown(f"""
+            <div style="text-align: right; color: #666; font-size: 0.8em; margin-top: 25px;">
+                Last Sync: {last_sync}
+            </div>
+        """, unsafe_allow_html=True)
     
     tab1, tab2 = st.tabs(["🚀 Active Signal", "📜 Performance History"])
 
     # --- TAB 1: ACTIVE SIGNAL (FROM JSON) ---
     with tab1:
-        signal = load_latest_json()
+        # signal = load_latest_json() # Now using bundled data
         
         if signal:
             # Map JSON keys specifically based on your provided file
@@ -277,7 +311,7 @@ def main():
 
     # --- TAB 2: HISTORY (FROM CSV) ---
     with tab2:
-        df = load_history_csv()
+        # df = load_history_csv() # Now using bundled data
         
         if not df.empty and 'Ticker' in df.columns:
             
