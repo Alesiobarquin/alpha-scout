@@ -1,26 +1,26 @@
 {
   "catalysts": [
     {
-      "ticker": "CMC",
-      "current_price": 73.22,
-      "market_cap": "$8.7B",
+      "ticker": "KRYS",
+      "current_price": 248.91,
+      "market_cap": "$7.2B",
       "conviction_score": 8,
-      "thesis": "Reported 'exceptional' Q1 2026 earnings with 52% YoY EBITDA growth and raised guidance, yet the stock has only reacted modestly (+2.4%), presenting a classic PEAD opportunity as analysts re-rate the infrastructure tailwinds.",
-      "catalyst_details": "Q1 Fiscal 2026 Earnings Beat (Jan 8, 2026): EPS $1.58 vs $1.55 est; Revenue $2.03B. Core EBITDA margin expanded to 14.9%.",
-      "absorption_status": "Price is up ~2% pre-market/early trade; low initial volatility suggests institutional accumulation phase has not yet peaked.",
-      "earnings_date": "2026-01-08",
-      "relative_volume": "2.5x",
-      "stop_loss_trigger": "$70.89 (1.5 ATR)",
+      "thesis": "Positive interim Phase 1 data for KB407 validates the company's redosable gene therapy platform in Cystic Fibrosis, a major new indication. Despite analyst upgrades to $309 (Citigroup) and $272 (BofA), the stock has only moved ~1-2%, leaving the catalyst largely unpriced.",
+      "catalyst_details": "On Jan 8, 2026, Krystal Biotech announced positive interim results from the Phase 1 CORAL-1 study, confirming successful lung delivery and expression of wild-type CFTR protein.",
+      "absorption_status": "Muted +1% reaction suggests the market is underestimating the platform validation; price is consolidating while analysts aggressively raise targets.",
+      "earnings_date": "2026-02-23",
+      "relative_volume": "1.2x",
+      "stop_loss_trigger": "$235.44 (1.5 ATR)",
       "sentiment": "Bullish",
-      "prediction_market": "High confidence in continued drift due to infrastructure spend.",
-      "recency_proof": "Jan 8, 2026 PR Newswire: CMC Reports First Quarter Fiscal 2026 Results.",
-      "risk": "Cyclical downturn in steel pricing or construction slowdown.",
-      "expected_upside": "15% ($86.00 target) | Target: $77.88",
-      "mispricing_evidence": "Trading at ~10.6x Forward P/E vs Industry avg of ~14x despite 50%+ EBITDA growth rate.",
-      "x_sentiment": "Positive buzz on 'TAG' program execution.",
-      "atr_value": 1.55,
-      "calculated_stop_loss": 70.89,
-      "calculated_target": 77.88
+      "prediction_market": "High confidence in platform expansion.",
+      "recency_proof": "https://ir.krystalbio.com/news-releases/news-release-details/krystal-biotech-announces-positive-interim-clinical-update-kb407",
+      "risk": "Early-stage clinical risk; liquidity in gene therapy sector.",
+      "expected_upside": "20-25% (Target $309) | Target: $275.85",
+      "mispricing_evidence": "Analyst price target upgrades to $309 following data release contrast with flat/marginal price action.",
+      "x_sentiment": "Positive buzz on $KRYS platform validation.",
+      "atr_value": 8.98,
+      "calculated_stop_loss": 235.44,
+      "calculated_target": 275.85
     }
   ]
 }
