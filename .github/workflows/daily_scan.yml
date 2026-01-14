@@ -1,4 +1,4 @@
-name: Alpha Scout Daily Scan
+name: Stock Scout Daily Scan
 
 on:
   schedule:
@@ -27,7 +27,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt # Ensure pandas and yfinance are here!
 
-      - name: Run Alpha Scout
+      - name: Run Stock Scout
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -36,8 +36,8 @@ jobs:
 
       - name: Commit and Push Data Updates
         run: |
-          git config --global user.name "Alpha Scout Bot"
-          git config --global user.email "bot@alphascout.local"
+          git config --global user.name "Stock Scout Bot"
+          git config --global user.email "bot@stockscout.local"
           
           # Pull latest changes to avoid conflicts if you edited the CSV locally
           git pull origin main --rebase 

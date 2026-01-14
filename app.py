@@ -11,7 +11,7 @@ from streamlit_autorefresh import st_autorefresh
 # 1. PAGE CONFIGURATION & STYLING
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Alpha Scout Terminal",
+    page_title="Stock Scout Terminal",
     page_icon="🦅",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -224,7 +224,7 @@ def main():
     # 4. UI Header
     c_title, c_sync = st.columns([3, 1])
     with c_title:
-        st.title("Alpha Scout Terminal")
+        st.title("Stock Scout Terminal")
     with c_sync:
         st.markdown(f"""
             <div style="text-align: right; color: #666; font-size: 0.8em; margin-top: 25px;">

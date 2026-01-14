@@ -15,7 +15,6 @@ from google.genai import types
 import pytz
 
 # --- CONFIGURATION ---
-# Updated to the latest preview model as requested
 MODEL_ID = os.getenv("GEMINI_MODEL", "gemini-3-pro-preview") 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
@@ -172,8 +171,8 @@ def sync_data_to_github():
     print("[-] Starting Git Sync...")
     try:
         # Configure Git
-        subprocess.run(["git", "config", "--global", "user.name", "AlphaScoutBot"], check=True)
-        subprocess.run(["git", "config", "--global", "user.email", "bot@alphascout.com"], check=True)
+        subprocess.run(["git", "config", "--global", "user.name", "StockScoutBot"], check=True)
+        subprocess.run(["git", "config", "--global", "user.email", "bot@stockscout.com"], check=True)
         
         # Add Files
         subprocess.run(["git", "add", DATA_FILE, PERFORMANCE_LOG_FILE], check=True)
@@ -198,7 +197,7 @@ def get_alpha_scout_response():
     three_days_ago = (now - timedelta(days=3)).strftime('%Y-%m-%d')
 
     system_instruction = """
-    Role: You are “Alpha Scout,” a Quant-Fundamental Analyst.
+    Role: You are “Stock Scout,” a Quant-Fundamental Analyst.
     STRATEGY: PEAD, Biotech PDUFA, Insider Aggression.
     FILTERS:
     1. 8% RULE: Discard if stock is already up >8% today.
@@ -240,7 +239,7 @@ def format_telegram_message(catalyst: Catalyst) -> str:
         ny_time = datetime.now().strftime('%H:%M UTC')
 
     return (
-        f"🚀 *Alpha Scout Signal: ${catalyst.ticker}*\n"
+        f"🚀 *Stock Scout Signal: ${catalyst.ticker}*\n"
         f"✅ *API Verified Price:* ${catalyst.current_price:.2f}\n"
         f"📉 *Calculated Stop Loss (ATR):* ${catalyst.calculated_stop_loss:.2f}\n"
         f"🎯 *Target:* ${catalyst.calculated_target:.2f}\n"
@@ -265,7 +264,7 @@ def send_telegram_alert(message: str):
 
 # --- MAIN EXECUTION ---
 def main():
-    print("[-] Alpha Scout initializing (Hybrid Quant-Fundamental Mode)...")
+    print("[-] Stock Scout initializing (Hybrid Quant-Fundamental Mode)...")
     try:
         report = get_alpha_scout_response()
         if not report or not report.catalysts:

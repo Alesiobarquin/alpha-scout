@@ -43,8 +43,8 @@ Stock Scout identifies high-conviction trading opportunities by combining large-
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/alpha-scout.git
-cd alpha-scout
+git clone https://github.com/your-username/stock-scout.git
+cd stock-scout
 
 # Install dependencies
 pip install -r requirements.txt
