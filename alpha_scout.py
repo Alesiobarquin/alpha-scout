@@ -162,32 +162,7 @@ def log_to_performance_csv(catalyst: Catalyst):
     except IOError as e:
         print(f"[!] Failed to write to CSV: {e}")
 
-# --- GIT SYNC FUNCTION ---
-def sync_data_to_github():
-    """
-    Commits and pushes the updated data files to the repository.
-    Requires 'Workflow permissions' set to 'Read and write' in GitHub Settings.
-    """
-    print("[-] Starting Git Sync...")
-    try:
-        # Configure Git
-        subprocess.run(["git", "config", "--global", "user.name", "StockScoutBot"], check=True)
-        subprocess.run(["git", "config", "--global", "user.email", "bot@stockscout.com"], check=True)
-        
-        # Add Files
-        subprocess.run(["git", "add", DATA_FILE, PERFORMANCE_LOG_FILE], check=True)
-        
-        # Commit (Allow empty if no changes)
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        commit_msg = f"Automated Data Update: {timestamp}"
-        subprocess.run(["git", "commit", "-m", commit_msg], check=False) # check=False to ignore 'nothing to commit' errors
-        
-        # Push
-        subprocess.run(["git", "push"], check=True)
-        print("[*] Git Sync Complete: Data pushed to repository.")
-        
-    except subprocess.CalledProcessError as e:
-        print(f"[!] Git Sync Failed: {e}")
+
 
 # --- AGENT SETUP ---
 def get_alpha_scout_response():
@@ -307,8 +282,7 @@ def main():
         
         print(f"[*] Processed {len(valid_catalysts)} valid signals. Sent {len(top_picks)} alerts.")
         
-        # 4. GIT SYNC (Final Step)
-        sync_data_to_github()
+
 
     except Exception as e:
         print(f"[!] Critical Error: {e}")
