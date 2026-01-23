@@ -219,8 +219,28 @@ def get_alpha_scout_response():
                     time.sleep(wait_time)
                     continue
             
-            # If we're out of retries or it's a different error, fail loudly
-            print(f"[!] API call failed after {attempt+1} attempts: {e}")
+            # If we're out of retries for the primary model, try the BACKUP
+            if attempt == max_retries - 1:
+                print(f"[!] Primary model {MODEL_ID} failed after {max_retries} attempts.")
+                print(f"[*] Switching to Fallback Model: gemini-2.5-pro...")
+                try:
+                    response = client.models.generate_content(
+                        model="gemini-2.5-pro",
+                        contents=prompt,
+                        config=types.GenerateContentConfig(
+                            system_instruction=system_instruction,
+                            tools=tools,
+                            response_mime_type="application/json",
+                            response_schema=ScoutReport
+                        )
+                    )
+                    return response.parsed
+                except Exception as backup_e:
+                    print(f"[!] Critical: Backup model also failed: {backup_e}")
+                    raise backup_e
+            
+            # If it's a non-retryable error (not caught above) or logic fails
+            print(f"[!] API call failed: {e}")
             raise e
 
 # --- OUTPUT HANDLERS ---
