@@ -206,14 +206,15 @@ def get_alpha_scout_response():
             )
             return response.parsed
         except Exception as e:
-            error_str = str(e)
+            error_str = str(e).lower()
             if attempt < max_retries - 1:
-                if "503" in error_str or "overloaded" in error_str.lower():
-                    wait_time = base_delay * (2 ** attempt) # 5, 10, 20, 40...
-                    print(f"[!] Model overloaded (503). Retrying in {wait_time}s...")
+                # Retry on: 503 (Overloaded), 429 (Rate Limit), Disconnected, Timeout
+                if any(x in error_str for x in ["503", "overloaded", "disconnected", "timeout", "network"]):
+                    wait_time = base_delay * (2 ** attempt) # Exponential backoff
+                    print(f"[!] Network/API Error ({error_str[:50]}...). Retrying in {wait_time}s...")
                     time.sleep(wait_time)
                     continue
-                elif "429" in error_str: # Rate limit
+                elif "429" in error_str:
                     wait_time = 30
                     print(f"[!] Rate limit (429). Cooling down for {wait_time}s...")
                     time.sleep(wait_time)
@@ -222,10 +223,10 @@ def get_alpha_scout_response():
             # If we're out of retries for the primary model, try the BACKUP
             if attempt == max_retries - 1:
                 print(f"[!] Primary model {MODEL_ID} failed after {max_retries} attempts.")
-                print(f"[*] Switching to Fallback Model: gemini-2.5-pro...")
+                print(f"[*] Switching to Fallback Model: gemini-3.0-flash...")
                 try:
                     response = client.models.generate_content(
-                        model="gemini-2.5-pro",
+                        model="gemini-3.0-flash",
                         contents=prompt,
                         config=types.GenerateContentConfig(
                             system_instruction=system_instruction,
