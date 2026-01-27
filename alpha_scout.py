@@ -230,7 +230,7 @@ def get_alpha_scout_response():
                 print(f"[*] Switching to Fallback Model: gemini-3.0-flash...")
                 try:
                     response = client.models.generate_content(
-                        model="gemini-3.0-flash",
+                        model="gemini-3.0-flash-preview",
                         contents=prompt,
                         config=types.GenerateContentConfig(
                             system_instruction=system_instruction,
